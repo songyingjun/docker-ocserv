@@ -2,8 +2,8 @@ FROM alpine:3.7
 
 MAINTAINER Joye song <joyesong@qq.com>
 
-ENV OC_VERSION=0.12.1
-
+ENV OC_VERSION=0.12.5
+ENV AUTOGEN_VERSION=5.18.16
 RUN buildDeps=" \
 		curl \
 		g++ \
