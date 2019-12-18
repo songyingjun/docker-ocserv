@@ -1,6 +1,6 @@
 FROM alpine:3.7
 
-MAINTAINER Tommy Lau <tommy@gen-new.com>
+MAINTAINER Joye song <joyesong@qq.com>
 
 ENV OC_VERSION=0.12.1
 
@@ -21,6 +21,22 @@ RUN buildDeps=" \
 		xz \
 	"; \
 	set -x \
+    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed \
+    && apk add --update --virtual .build-deps $buildDeps \
+    && cd ~ \
+    && RADCLI_VERSION=`curl -s "https://github.com/radcli/radcli/releases/latest" | sed -n 's/^.*tag\/\(.*\)".*/\1/p'` \
+    && curl -SL "https://github.com/radcli/radcli/archive/$RADCLI_VERSION.tar.gz" -o radcli.tar.gz \
+    && mkdir -p /usr/src/radcli \
+    && tar -xf radcli.tar.gz -C /usr/src/radcli --strip-components=1 \
+    && rm radcli.tar.gz \
+    && cd /usr/src/radcli \
+    && chmod +x autogen.sh \
+    && ./autogen.sh \
+    && ./configure --sysconfdir=/etc --prefix=/usr \
+    && make \
+    && make install \
+    && cd ~ \
+    && rm -fr /usr/src/radcli \	
 	&& apk add --update --virtual .build-deps $buildDeps \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" -o ocserv.tar.xz \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz.sig" -o ocserv.tar.xz.sig \
