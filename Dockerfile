@@ -21,27 +21,15 @@ RUN buildDeps=" \
 		xz \
 	"; \
 	set -x \
-    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed guile\
+    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed\
     && apk add --update --virtual .build-deps $buildDeps \
     && cd ~ \
-    && curl -SL "http://ftp.gnu.org/gnu/autogen/rel$AUTOGEN_VERSION/autogen-$AUTOGEN_VERSION.tar.xz" -o autogen.tar.xz \
-    && mkdir -p /usr/src/autogen \
-    && tar -xf autogen.tar.xz -C /usr/src/autogen --strip-components=1 \
-    && rm autogen.tar.xz \
-    && cd /usr/src/autogen \
-    && ./configure --prefix=/usr \
-    && make \
-    && make install \
-    && cd ~ \
-    && rm -fr /usr/src/autogen \    
     && RADCLI_VERSION=`curl -s "https://github.com/radcli/radcli/releases/latest" | sed -n 's/^.*tag\/\(.*\)".*/\1/p'` \
     && curl -SL "https://github.com/radcli/radcli/archive/$RADCLI_VERSION.tar.gz" -o radcli.tar.gz \
     && mkdir -p /usr/src/radcli \
     && tar -xf radcli.tar.gz -C /usr/src/radcli --strip-components=1 \
     && rm radcli.tar.gz \
     && cd /usr/src/radcli \
-    && chmod +x autogen.sh \
-    && ./autogen.sh \
     && ./configure --sysconfdir=/etc --prefix=/usr \
     && make \
     && make install \
