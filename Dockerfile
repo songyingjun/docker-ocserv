@@ -21,7 +21,7 @@ RUN buildDeps=" \
 		xz \
 	"; \
 	set -x \
-    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed \
+    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed guile\
     && apk add --update --virtual .build-deps $buildDeps \
     && cd ~ \
     && curl -SL "http://ftp.gnu.org/gnu/autogen/rel$AUTOGEN_VERSION/autogen-$AUTOGEN_VERSION.tar.xz" -o autogen.tar.xz \
