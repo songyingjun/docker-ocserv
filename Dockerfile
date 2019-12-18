@@ -21,7 +21,7 @@ RUN buildDeps=" \
 		xz \
 	"; \
 	set -x \
-    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed\
+    && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed autoconf\
     && apk add --update --virtual .build-deps $buildDeps \
     && cd ~ \
     && RADCLI_VERSION=`curl -s "https://github.com/radcli/radcli/releases/latest" | sed -n 's/^.*tag\/\(.*\)".*/\1/p'` \
@@ -30,6 +30,8 @@ RUN buildDeps=" \
     && tar -xf radcli.tar.gz -C /usr/src/radcli --strip-components=1 \
     && rm radcli.tar.gz \
     && cd /usr/src/radcli \
+    && chmod +x autogen.sh \
+    && ./autogen.sh \
     && ./configure --sysconfdir=/etc --prefix=/usr \
     && make \
     && make install \
