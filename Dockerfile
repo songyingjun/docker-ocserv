@@ -24,6 +24,16 @@ RUN buildDeps=" \
     && apk add --update libtool gnutls gnutls-utils iptables libev libintl libnl3 libseccomp linux-pam lz4-libs openssl readline sed \
     && apk add --update --virtual .build-deps $buildDeps \
     && cd ~ \
+    && curl -SL "http://ftp.gnu.org/gnu/autogen/rel$AUTOGEN_VERSION/autogen-$AUTOGEN_VERSION.tar.xz" -o autogen.tar.xz \
+    && mkdir -p /usr/src/autogen \
+    && tar -xf autogen.tar.xz -C /usr/src/autogen --strip-components=1 \
+    && rm autogen.tar.xz \
+    && cd /usr/src/autogen \
+    && ./configure --prefix=/usr \
+    && make \
+    && make install \
+    && cd ~ \
+    && rm -fr /usr/src/autogen \    
     && RADCLI_VERSION=`curl -s "https://github.com/radcli/radcli/releases/latest" | sed -n 's/^.*tag\/\(.*\)".*/\1/p'` \
     && curl -SL "https://github.com/radcli/radcli/archive/$RADCLI_VERSION.tar.gz" -o radcli.tar.gz \
     && mkdir -p /usr/src/radcli \
@@ -37,16 +47,6 @@ RUN buildDeps=" \
     && make install \
     && cd ~ \
     && rm -fr /usr/src/radcli \	
-    && curl -SL "http://ftp.gnu.org/gnu/autogen/rel$AUTOGEN_VERSION/autogen-$AUTOGEN_VERSION.tar.xz" -o autogen.tar.xz \
-    && mkdir -p /usr/src/autogen \
-    && tar -xf autogen.tar.xz -C /usr/src/autogen --strip-components=1 \
-    && rm autogen.tar.xz \
-    && cd /usr/src/autogen \
-    && ./configure --prefix=/usr \
-    && make \
-    && make install \
-    && cd ~ \
-    && rm -fr /usr/src/autogen \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz" -o ocserv.tar.xz \
 	&& curl -SL "ftp://ftp.infradead.org/pub/ocserv/ocserv-$OC_VERSION.tar.xz.sig" -o ocserv.tar.xz.sig \
 	&& gpg --keyserver pgp.mit.edu --recv-key 7F343FA7 \
